@@ -1,7 +1,9 @@
-const express = require('express')
-const app = express()
-const cors = require('cors')
-require('dotenv').config()
+const express = require('express');
+const app = express();
+const cors = require('cors');
+require('dotenv').config();
+
+require('./database-connection');
 
 app.use(cors())
 app.use(express.static('public'))
