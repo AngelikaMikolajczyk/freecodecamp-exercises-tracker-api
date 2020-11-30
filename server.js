@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 require('dotenv').config();
 const bodyParser = require('body-parser');
-const { createUser } = require('./user-service');
+const { createUser, findByUsername } = require('./user-service');
 
 require('./database-connection');
 
@@ -19,13 +19,24 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.post('/api/exercise/new-user', function(req, res){
   let username = req.body.username;
 
-  createUser(username, function(err, data){
-    if(err){
+  findByUsername(username, function(err, data){
+    if(err) {
       res.json({error: 'unexpected error'});
       return;
+    } 
+    if(data.username === username){
+      res.status(400).send("Username already taken");
+      return;
     }
-    res.json({"username": data.username, "_id": data._id});
+    createUser(username, function(err, data){
+      if(err){
+        res.json({error: 'unexpected error'});
+        return;
+      }
+      res.json({"username": data.username, "_id": data._id});
+    })
   })
+
 })
 
 

@@ -9,4 +9,11 @@ function createUser(newUsername, done) {
     })
 }
 
-module.exports = {createUser};
+function findByUsername(findUsername, done){
+    User.findOne({username: findUsername}, function(err, findUser){
+        if(err) return done(err);
+        done(null, findUser);
+    })
+}
+
+module.exports = {createUser, findByUsername};
