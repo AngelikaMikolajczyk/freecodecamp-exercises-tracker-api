@@ -31,4 +31,11 @@ function findUserAndAddExercise(userId, exerciseDuration, exerciseDescription, e
     })
 }
 
-module.exports = {createUser, findByUsername, findAllUsers, findUserAndAddExercise};
+function findUserById(userId, done){
+    User.findById(userId, function(err, user){
+        if(err) return done(err);
+        done(null, user);
+    })
+}
+
+module.exports = {createUser, findByUsername, findAllUsers, findUserAndAddExercise, findUserById};

@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 require('dotenv').config();
 const bodyParser = require('body-parser');
-const { createUser, findByUsername, findAllUsers, findUserAndAddExercise } = require('./user-service');
+const { createUser, findByUsername, findAllUsers, findUserAndAddExercise, findUserById } = require('./user-service');
 
 require('./database-connection');
 
@@ -59,6 +59,20 @@ app.post('/api/exercise/add', function(req, res){
       return
     }
     res.json({_id: data._id, username: data.username, date: new Date(date).toDateString(), duration: Number(duration), description});
+  })
+})
+
+// full exercise log for user
+app.get('/api/exercise/log', function(req, res){
+  let id = req.query.userId;
+
+  findUserById(id, function(err, data){
+    if(err){
+      res.json({error: 'unexpected error'})
+    }
+    res.json({_id: data._id, username: data.username, count: data.log.length, log: data.log.map(log => {
+      return {description: log.description, duration: log.duration, date: new Date(log.date).toDateString()}
+    })});
   })
 })
 
