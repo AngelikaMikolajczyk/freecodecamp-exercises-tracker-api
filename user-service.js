@@ -24,4 +24,11 @@ function findAllUsers(done){
     })
 }
 
-module.exports = {createUser, findByUsername, findAllUsers};
+function findUserAndAddExercise(userId, exerciseDuration, exerciseDescription, exerciseDate, done){
+    User.findByIdAndUpdate({_id: userId}, {$push: {log: [{date: exerciseDate, duration: exerciseDuration, description: exerciseDescription}]}}, {new: true}, function(err, addedExercise){
+        if(err) return done(err);
+        done(null, addedExercise);
+    })
+}
+
+module.exports = {createUser, findByUsername, findAllUsers, findUserAndAddExercise};
