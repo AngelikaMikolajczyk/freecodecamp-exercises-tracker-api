@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 require('dotenv').config();
 const bodyParser = require('body-parser');
-const { createUser, findByUsername } = require('./user-service');
+const { createUser, findByUsername, findAllUsers } = require('./user-service');
 
 require('./database-connection');
 
@@ -36,9 +36,18 @@ app.post('/api/exercise/new-user', function(req, res){
       res.json({"username": data.username, "_id": data._id});
     })
   })
-
 })
 
+// generate list of all users
+app.get('/api/exercise/users', function(req, res){
+  findAllUsers(function(err, users){
+    if(err){
+      res.json({error: 'unexpected error'});
+      return;
+    }
+    res.json(users);
+  })
+})
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {

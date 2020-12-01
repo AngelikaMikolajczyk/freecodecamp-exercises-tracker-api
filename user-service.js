@@ -16,4 +16,12 @@ function findByUsername(findUsername, done){
     })
 }
 
-module.exports = {createUser, findByUsername};
+function findAllUsers(done){
+    let allUsers = User.find({});
+    allUsers.select('_id username').exec((err, users) => {
+        if(err) return done(err);
+        done(null, users);
+    })
+}
+
+module.exports = {createUser, findByUsername, findAllUsers};
