@@ -65,6 +65,10 @@ app.post('/api/exercise/add', function(req, res){
 // full exercise log for user
 app.get('/api/exercise/log', function(req, res){
   let id = req.query.userId;
+  let limit = req.query.limit;
+  let dateFrom = req.query.from === undefined ? new Date(0) : new Date(req.query.from);
+  let dateTo = req.query.to === undefined ? new Date() : new Date(req.query.to);
+
 
   findUserById(id, function(err, data){
     if(err){
@@ -72,7 +76,7 @@ app.get('/api/exercise/log', function(req, res){
     }
     res.json({_id: data._id, username: data.username, count: data.log.length, log: data.log.map(log => {
       return {description: log.description, duration: log.duration, date: new Date(log.date).toDateString()}
-    })});
+    }).filter(element => (Date.parse(element.date) > dateFrom  && Date.parse(element.date) < dateTo)).slice(0, (limit === undefined ? data.log.length : limit))});
   })
 })
 
