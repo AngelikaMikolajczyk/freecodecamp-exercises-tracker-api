@@ -25,7 +25,7 @@ function findAllUsers(done){
 }
 
 function findUserAndAddExercise(userId, exerciseDuration, exerciseDescription, exerciseDate, done){
-    User.findByIdAndUpdate({_id: userId}, {$push: {log: [{date: exerciseDate, duration: exerciseDuration, description: exerciseDescription}]}}, {new: true}, function(err, addedExercise){
+    User.findByIdAndUpdate({_id: userId}, {$push: {log: [{date: (!exerciseDate ? new Date() : exerciseDate), duration: exerciseDuration, description: exerciseDescription}]}}, {new: true}, function(err, addedExercise){
         if(err) return done(err);
         done(null, addedExercise);
     })

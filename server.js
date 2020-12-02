@@ -29,7 +29,7 @@ app.post('/api/exercise/new-user', function(req, res){
       res.json({error: 'unexpected error'});
       return;
     } 
-    if(data.username === username){
+    if(data !== null && data.username === username){
       res.status(400).send("Username already taken");
       return;
     }
