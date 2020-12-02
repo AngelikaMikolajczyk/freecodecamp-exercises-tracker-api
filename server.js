@@ -19,6 +19,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.post('/api/exercise/new-user', function(req, res){
   let username = req.body.username;
 
+  if(!username){
+    res.status(400).send("Path `username` is required.");
+    return;
+  }
+
   findByUsername(username, function(err, data){
     if(err) {
       res.json({error: 'unexpected error'});
@@ -28,6 +33,7 @@ app.post('/api/exercise/new-user', function(req, res){
       res.status(400).send("Username already taken");
       return;
     }
+    
     createUser(username, function(err, data){
       if(err){
         res.json({error: 'unexpected error'});
@@ -58,13 +64,19 @@ app.post('/api/exercise/add', function(req, res){
       res.json({error: 'unexpected error'});
       return
     }
-    res.json({_id: data._id, username: data.username, date: new Date(date).toDateString(), duration: Number(duration), description});
+    res.json({_id: data._id, username: data.username, date: (!date ? new Date().toDateString() : new Date(date).toDateString()), duration: Number(duration), description});
   })
 })
 
 // full exercise log for user
 app.get('/api/exercise/log', function(req, res){
   let id = req.query.userId;
+
+  if(!id){
+    res.status(400).send("Unknown userId");
+    return;
+  }
+
   let limit = req.query.limit;
   let dateFrom = req.query.from === undefined ? new Date(0) : new Date(req.query.from);
   let dateTo = req.query.to === undefined ? new Date() : new Date(req.query.to);
